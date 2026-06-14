@@ -1,27 +1,196 @@
-🏥 HealthCompass - Healthcare Navigator
-A Risk-Aware Hospital Recommendation System
+# 🏥 HealthCompass: Risk-Aware Healthcare Navigator
 
-📌 Project Overview
-HealthCompass is a decision-support system that helps users find the safest and most suitable healthcare facility based on:
-Age
-One or multiple symptoms
-Location (human-readable area → mapped to coordinates)
-Insurance availability
-The system is not diagnostic.
-It focuses on navigation, urgency awareness, and affordability, ensuring that every input always produces an output, even in sparse data scenarios.
+## Overview
 
+HealthCompass is an intelligent healthcare recommendation system designed to help patients identify the most suitable healthcare facility based on their symptoms, age, location, and insurance status. Unlike diagnostic systems, HealthCompass focuses on healthcare accessibility, urgency assessment, affordability, and safe navigation to appropriate medical facilities.
 
-🎯 Key Objectives
-Assess medical urgency (risk level) using age and symptoms
-Recommend appropriate healthcare facilities (clinic / hospital / govt hospital)
-Estimate realistic treatment cost
-Use insurance as a soft affordability signal
-Guarantee safe fallback recommendations (never return empty results)
+The system combines machine learning-based risk assessment, location intelligence, healthcare facility filtering, cost estimation, and multi-factor ranking to deliver personalized and explainable healthcare recommendations.
 
+---
 
-HACKX/
+## Objectives
+
+* Assess patient urgency using age and reported symptoms.
+* Recommend appropriate healthcare facilities based on risk level.
+* Provide location-aware hospital recommendations.
+* Estimate treatment costs using symptom severity.
+* Incorporate insurance information as an affordability signal.
+* Rank healthcare facilities using multiple decision factors.
+* Ensure safe fallback recommendations in sparse data scenarios.
+* Improve healthcare accessibility through intelligent decision support.
+
+---
+
+## Dataset
+
+The system utilizes multiple healthcare datasets, including:
+
+* Hospital Information
+* Hospital Location Data
+* Insurance Coverage Data
+* Symptom Severity Mapping
+* Treatment Cost Information
+* Healthcare Facility Metadata
+
+---
+
+## Technologies Used
+
+* **Python**
+* **Streamlit**
+* **Pandas**
+* **NumPy**
+* **Scikit-learn**
+* **Geopy**
+* **Machine Learning**
+* **Rule-Based Decision Systems**
+
+---
+
+## Project Architecture
+
+```text
+User Input
+     ↓
+Risk Assessment Model
+     ↓
+Hospital Filtering Engine
+     ↓
+Distance Calculation
+     ↓
+Cost Estimation
+     ↓
+Insurance Evaluation
+     ↓
+Risk-Aware Ranking
+     ↓
+Top Hospital Recommendations
+```
+
+---
+
+## Project Workflow
+
+### 1. User Input Collection
+
+The Streamlit interface collects:
+
+* Patient Age
+* Multiple Symptoms
+* Geographic Location
+* Insurance Availability
+
+The system converts user-provided locations into geographic coordinates for distance calculations.
+
+---
+
+### 2. Risk Assessment
+
+A machine learning model evaluates:
+
+* Age-related risk
+* Symptom severity
+* Combined symptom impact
+
+The model categorizes patients into:
+
+* Low Risk
+* Medium Risk
+* High Risk
+
+---
+
+### 3. Hospital Filtering
+
+Healthcare facilities are filtered according to urgency level.
+
+| Risk Level | Recommended Facilities           |
+| ---------- | -------------------------------- |
+| High       | Hospitals, Medical Colleges      |
+| Medium     | Hospitals, Medical Colleges      |
+| Low        | Clinics, Dispensaries, Hospitals |
+
+This ensures recommendations remain medically appropriate.
+
+---
+
+### 4. Distance Calculation
+
+Location intelligence is used to:
+
+* Calculate distance between patients and hospitals.
+* Prioritize nearby facilities.
+* Improve emergency accessibility.
+
+Distance is measured using latitude and longitude coordinates.
+
+---
+
+### 5. Treatment Cost Estimation
+
+Estimated treatment costs are generated using:
+
+* Symptom severity
+* Multiple symptom combinations
+* Healthcare facility type
+* Government vs Private ownership
+
+Examples:
+
+* Fever → Lower outpatient cost
+* Chest Pain + Breathing Difficulty → Higher emergency treatment cost
+
+---
+
+### 6. Insurance-Aware Evaluation
+
+Insurance availability acts as a soft recommendation factor.
+
+The system:
+
+* Improves affordability scoring.
+* Slightly boosts eligible hospitals.
+
+The system does not:
+
+* Verify insurance claims.
+* Guarantee coverage.
+* Exclude hospitals based on insurance.
+
+---
+
+### 7. Hospital Ranking Engine
+
+Hospitals are ranked using multiple criteria:
+
+* Distance
+* Estimated Treatment Cost
+* Insurance Availability
+* Medical Urgency Level
+
+Risk-aware weighting ensures that the most important factors change depending on patient urgency.
+
+---
+
+## Key Features
+
+* Machine Learning-Based Risk Assessment
+* Multi-Symptom Evaluation
+* Location-Aware Hospital Recommendations
+* Cost Estimation Engine
+* Insurance-Aware Ranking
+* Explainable Decision Support
+* Healthcare Accessibility Optimization
+* Safe Fallback Recommendation Strategy
+
+---
+
+## Repository Structure
+
+```text
+HealthCompass/
 │
-├── data/                          # Dataset files
+├── data/
 │   ├── clean_pune_hospitals.csv
 │   ├── costs.csv
 │   ├── hospitals_with_insurance.csv
@@ -29,122 +198,112 @@ HACKX/
 │   ├── insurance.csv
 │   └── symptoms.csv
 │
-├── logic/                         # Core business logic layer
-│   ├── __init__.py
+├── logic/
 │   ├── cost_logic.py
 │   ├── hospital_filter.py
 │   ├── insurance_logic.py
 │   ├── scoring.py
 │   └── symptom_map.py
 │
-├── ml/                            # Machine learning components
-│   ├── __init__.py
+├── ml/
 │   └── risk_model.py
 │
-├── project/                       # Application layer
-│   ├── __init__.py
+├── project/
 │   └── orchestrator.py
 │
-├── utils/                         # Utility functions
-│   ├── __init__.py
+├── utils/
 │   └── geo.py
 │
-├── app.py                         # Streamlit entry point (root-level)
+├── app.py
 ├── README.md
 └── .gitignore
+```
 
+---
 
-🧠 Role of Each Component
-1️⃣ app.py – User Interface (Streamlit)
-Takes user inputs:
-Age
-Multiple symptoms
-Area (human-readable)
-Insurance option
-Maps area → latitude & longitude
-Calls recommend_hospitals() from orchestrator.py
-Displays:
-Risk level
-Hospital name
-Hospital type
-Distance
-Estimated cost
-Insurance status
+## Installation & Setup
 
-2️⃣ orchestrator.py – System Brain (Pipeline Controller)
-This file connects everything.
-Responsibilities:
-Load datasets once
-Call risk model
-Apply filtering
-Compute distance
-Attach cost & insurance
-Rank hospitals
+### Prerequisites
 
-3️⃣ ml/risk_model.py – Risk Assessment
-Uses age + symptoms
-Outputs:
-Low
-Medium
-High
+Make sure you have the following installed:
 
-4️⃣ logic/hospital_filter.py – Facility Selection
-Filters hospitals based on risk level:
-Risk Level	Allowed Facilities
-High	Hospital, Medical College
-Medium	Hospital, Medical College
-Low	Clinic, Dispensary, Hospital
-Ensures some care is always suggested
+* Python 3.9+
+* pip
+* Virtual Environment (recommended)
 
-5️⃣ logic/cost_logic.py – Cost Estimation
-Cost is computed using:
-Most severe symptom
-Incremental increase for multiple symptoms
-Facility ownership adjustment:
-Government → subsidized
-Private → premium
-Example:
-Fever → low OPD cost
-Chest pain + breathing difficulty → higher emergency cost
+### Clone the Repository
 
-6️⃣ logic/insurance_logic.py – Insurance Role
-Insurance is treated as a soft signal, not a hard constraint.
-What it does:
-Slightly boosts ranking when insurance is selected
-Improves affordability perception
-What it does NOT do:
-No claim approval
-No coverage guarantees
-No hospital exclusion
+```bash
+git clone https://github.com/janhavee-s/HealthCompass.git
+cd HealthCompass
+```
 
-7️⃣ logic/scoring.py – Final Ranking Engine
-Combines multiple signals:
-Distance (safety & speed)
-Estimated cost (affordability)
-Insurance signal
-Risk-aware weighting
-Different risk levels change importance of factors.
-The output is the Top 5 safest options, never empty.
+### Install Dependencies
 
-8️⃣ utils/geo.py – Distance Calculation
-Uses latitude & longitude
-Computes distance in kilometers
-Enables location-aware recommendations
+```bash
+pip install -r requirements.txt
+```
 
+### Run the Application
 
-🔁 End-to-End Pipeline Flow
-User Input
-   ↓
-Risk Assessment (age + symptoms)
-   ↓
-Risk-based Hospital Filtering
-   ↓
-Distance Calculation
-   ↓
-Cost Estimation (multi-symptom aware)
-   ↓
-Insurance Influence
-   ↓
-Risk-Aware Ranking
-   ↓
-Final Safe Recommendations
+From the root directory of the project, start the Streamlit application:
+
+```bash
+streamlit run app.py
+```
+
+### Access the Application
+
+After launching, open your browser and navigate to:
+
+```text
+http://localhost:8501
+```
+
+The HealthCompass dashboard will be available for healthcare facility recommendations and risk assessment.
+
+---
+
+## Key Insights
+
+* Healthcare accessibility depends on both urgency and proximity.
+* Multi-symptom analysis provides more reliable risk assessment than single-symptom evaluation.
+* Cost-aware recommendations improve healthcare affordability.
+* Insurance can influence accessibility without restricting options.
+* Risk-aware ranking produces safer and more practical healthcare recommendations.
+
+---
+
+## Future Enhancements
+
+* Real-Time Hospital Bed Availability
+* Doctor & Specialist Recommendation System
+* Appointment Scheduling Integration
+* Emergency Route Optimization
+* Predictive Healthcare Demand Forecasting
+* Explainable AI Dashboard
+* Multi-City Healthcare Coverage
+
+---
+
+## Skills Demonstrated
+
+* Machine Learning
+* Healthcare Analytics
+* Decision Support Systems
+* Geospatial Analysis
+* Data Processing & Feature Engineering
+* Recommendation Systems
+* Streamlit Application Development
+* Explainable AI
+* Risk Assessment Modeling
+
+---
+
+## Author
+
+**Janhavee Singh**
+
+B.Tech Computer Science | Artificial Intelligence | Machine Learning | Data Analytics
+
+HealthCompass demonstrates the integration of machine learning, healthcare analytics, location intelligence, and decision-support systems to improve patient navigation and healthcare accessibility through intelligent hospital recommendations.
